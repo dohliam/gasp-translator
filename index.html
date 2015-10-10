@@ -76,7 +76,7 @@
         if (localStorage["tr_" + idx + "_title"]) {
           tr_title.value = localStorage["tr_" + idx + "_title"];
         }
-        for (var i = 0; i < number_of_sections -1; i++) {
+        for (var i = 0; i < number_of_sections; i++) {
           window["story_tgt_" + i].setAttribute("oninput", "localStorage.tr_" + idx + "_s_" + i + "=this.value");
           if (localStorage["tr_" + idx + "_s_" + i]) {
             window["story_tgt_" + i].value = localStorage["tr_" + idx + "_s_" + i];
