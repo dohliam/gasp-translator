@@ -1,0 +1,55 @@
+table {
+  width: 100%;
+}
+td, th {
+  vertical-align: top;
+}
+textarea {
+  width: 100%;
+}
+.thumbnail {
+  width: 50px;
+}
+.thumbnail:hover {
+  width: 250px;
+}
+#story_table {
+  width: 80%;
+}
+#story_img {
+  width: 10%;
+}
+#story_src {
+  width: 45%;
+}
+#story_tgt {
+  width: 45%;
+}
+#nav_buttons td {
+  border-bottom: 0;
+}
+.editable {
+  background-color: white;
+  display: inline-block;
+  font-weight: bold;
+  width: 15em;
+}
+.editable[placeholder]:empty:before {
+  content: attr(placeholder);
+  color: #555;
+  font-weight: normal;
+}
+th {
+  font-variant: small-caps;
+}
+#output {
+  width: 80%;
+}
+#review_sub {
+  width: 20%;
+}
+.tooltip:hover:before {
+  content: "You're almost done!";
+  float: right;
+  background-color: white;
+}

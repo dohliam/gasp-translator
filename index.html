@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
+    <title>Global-ASP Translator</title>
+    <link rel="stylesheet" type="text/css" href="http://yegor256.github.io/tacit/tacit.min.css"/>
+    <link rel="stylesheet" type="text/css" href="translator.css"/>
+    <script src="stories.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      function translate_story(nav) {
+        var story_table = document.getElementById("story_table");
+        var messages = document.getElementById("messages");
+        var translator = document.getElementById("translator");
+        var translator_div = document.getElementById("translator_div");
+        var idx_store = document.getElementById("idx");
+        var next = document.getElementById("nav_buttons");
+        var previous = document.getElementById("previous");
+        var translate_button = document.getElementById("translate_button");
+
+        n = parseInt(idx_store.innerHTML);
+
+        if (nav == "prev") {
+          n = n-2;
+        } else if (typeof nav == "number") {
+          n = nav;
+        }
+        idx = json[n].i;
+        title = json[n].t;
+        attribution = json[n].a;
+        sections = json[n].s;
+
+        content_div = "      <table id=\"content_table\">\n        <tr><th style='width:5%'></th><th style='width:30%'>original asp story</th><th style='width:65%'>your translation</th></tr><tr>\n          <td><img class=\"thumbnail\" src=\"https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/" + idx + "/01.jpg\"></td>\n          <td id=\"title\">Title: <i>" + title + "</i></td>\n          <td id=\"story_tgt_title\"><input type=\"text\" id=\"title_text\" /></td></tr><tr>\n"
+
+        messages.innerHTML = "Now translating story #" + idx + " - <i>" + title + "</i> into: <span class=\"editable\" contenteditable=\"true\" id=\"language\" placeholder=\"Target language\"></span>";
+        var language = document.getElementById("language");
+        language.setAttribute("oninput", "localStorage.l=this.innerHTML");
+        if (localStorage.l) {
+          language.innerText = localStorage.l;
+        }
+        if (localStorage.a) {
+          translator.innerText = localStorage.a;
+        }
+        translator_div.style.display = '';
+        translate_button.style.display = 'none';
+        nav_buttons.style.display = '';
+
+        for (var i = 0; i < sections.length; i++) {
+          page_number = i + 2;
+          if (page_number < 10) {
+            page_number = "0" + page_number;
+          }
+          content_div = content_div + "          <td><img class=\"thumbnail\" src=\"https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/" + idx + "/" + page_number + ".jpg\"></td>\n          <td id=\"story_src_" + i + "\">" + json[n].s[i][page_number] + "</td>\n          <td><textarea id=\"story_tgt_" + i + "\"></textarea></td>        </tr>"
+        }
+
+        translang = "Translation: " + translator.innerText + "<br>* Language: " + language.innerText;
+
+        story_table = document.getElementById("story_table");
+        attribution_row = "          <td></td>\n          <td id=\"attribution\">" + attribution.replace(/\n/g, "<br>") + "</td>\n          <td>" + attribution.replace(/\n/g, "<br>").replace(/Language: .*/, translang) + "</td>        </tr>";
+        story_table.innerHTML = content_div + attribution_row + "      </table>";
+
+        next.style.display = '';
+        idx_store.innerHTML = idx;
+        document.getElementById("number_of_sections").innerHTML = sections.length;
+
+        get_storage(idx);
+
+        document.getElementById("review_sub").style.display = '';
+
+      }
+
+      function get_storage(idx) {
+        number_of_sections = parseInt(document.getElementById("number_of_sections").innerHTML);
+        tr_title = document.getElementById("title_text");
+        tr_title.setAttribute("oninput", "localStorage.tr_" + idx + "_title=this.value");
+        if (localStorage["tr_" + idx + "_title"]) {
+          tr_title.value = localStorage["tr_" + idx + "_title"];
+        }
+        for (var i = 0; i < number_of_sections -1; i++) {
+          window["story_tgt_" + i].setAttribute("oninput", "localStorage.tr_" + idx + "_s_" + i + "=this.value");
+          if (localStorage["tr_" + idx + "_s_" + i]) {
+            window["story_tgt_" + i].value = localStorage["tr_" + idx + "_s_" + i];
+          }
+        }
+      }
+
+      function get_translation() {
+        tr_title = document.getElementById("title_text").value;
+        attribution = document.getElementById("attribution").innerHTML;
+        number_of_sections = parseInt(document.getElementById("number_of_sections").innerHTML);
+        var translator = document.getElementById("translator");
+        var language = document.getElementById("language");
+        translation_output = document.getElementById("translation_output");
+
+        format_content = "# " + tr_title + "\n\n##\n";
+        for (var i = 0; i < number_of_sections; i++) {
+          tr_text = document.getElementById("story_tgt_" + i).value;
+          format_content = format_content + tr_text + "\n\n##\n";
+        }
+        translang = "Translation: " + translator.innerText + "\n* Language: " + language.innerText;
+
+        window.output.style.display = '';
+        translation_output.value = format_content + attribution.replace(/<br>/g, "\n").replace(/Language: .*/, translang)
+
+        document.getElementById("submit_form").style.display = '';
+
+        prepare_submission();
+        
+      }
+      function story_api() {
+        var geturl = location.href;
+        if (/\?/.test(geturl) == true) {
+          var args = /\?(\d+)/.exec(geturl)[1];
+          number = parseInt(args) - 1;
+          translate_story(number);
+        }
+      }
+
+      function random_story() {
+        rand = Math.floor(Math.random()*364) + 1;
+        translate_story(rand);
+      }
+
+      function prepare_submission() {
+        var sub = document.getElementById("subject_line");
+        var rev = document.getElementById("review_sub");
+        sub.value = 'New translation: #' + window.idx + ', "' + window.title + '" into ' + window.language.innerHTML + " by " + window.translator.innerText;
+        window.name_line.value = window.translator.innerText;
+        window.story_number.value = window.idx;
+        window.story_language.value = window.language.innerHTML;
+        window.story_translation.value = window.translation_output.value;
+        rev.style.width = "80%";
+        rev.classList.remove("tooltip");
+        rev.innerHTML = "If you are satisfied with your translation, press the submit button below to send it for inclusion in the Global-ASP project:";
+      }
+
+    </script>
+  </head>
+  <body onload="story_api()">
+    <h1>Global-ASP Translator</h1>
+    <div id="messages">Welcome to the Global-ASP Translator!<br>To get started, press the Translate! button below.</div>
+    <div id="translator_div" style="display:none">Translated by: <span class="editable" contenteditable="true" oninput="localStorage.a=this.innerHTML" id="translator" placeholder="Your name"></span></div>
+    <br>
+    <div id="story_table">&nbsp;</div>
+
+    <div id="translate_button">
+      <input type="button" value="Translate!" name="button1" accesskey="t" onclick="translate_story('first')">
+    </div>
+    <br>
+    <div id="nav_buttons" style="display:none;">
+      <table>
+        <tr>
+          <td><a href="#" accesskey="p" onclick="translate_story('prev')"><img src="previous.png"></a></td>
+          <td><a href="#" accesskey="r" onclick="random_story()"><img src="random.png"></a></td>
+          <td><a href="#" accesskey="n" onclick="translate_story('next')"><img src="next.png"></a></td></tr><tr><td>Previous story</td><td>Random Story</td><td>Next story</td>
+        </tr>
+      </table>
+    </div>
+
+    <div id="idx" style="display:none;">0000</div>
+    <div id="number_of_sections" style="display:none;">&nbsp;</div>
+
+    <div id="output" style="display:none">
+      <textarea id="translation_output" rows="10"></textarea>
+    </div>
+    <div id="review_sub" class="tooltip" style="display:none">
+      <input type="button" value="Review submission" accesskey="g" name="button2" onclick="get_translation()">
+    </div>
+
+    <div id="submit_form" style="display:none">
+      <form action="http://formspree.io/globalafricanstorybook@gmail.com" method="post">
+            <input type="hidden" type="final" name="name" id="name_line">
+            <input type="text" name="_replyto" placeholder="Your email (optional)" />
+            <input type="hidden" name="_next" value="/translator/thanks.html" />
+            <input type="hidden" name="_subject" id="subject_line" value="New submission!" />
+            <input type="hidden" name="story_number" id="story_number" value="" />
+            <input type="hidden" name="story_language" id="story_language" value="" />
+            <input type="hidden" name="story_translation" id="story_translation" value="" />
+            <input type="submit" value="Submit Translation">
+      </form>
+    </div>
+
+  </body>
+</html>
