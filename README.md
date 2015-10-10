@@ -1,4 +1,4 @@
-# Global-ASP Translator - A translation system for the Global African Storybook Project
+# Global-ASP Translator - Translation system for the Global African Storybook Project
 
 The goal of this project is to build an easy-to-use and accessible translation system to automate the process of translating [African Storybook Project](http://africanstorybook.org/) stories into other languages for [Global-ASP](https://global-asp.github.io).
 
@@ -25,6 +25,13 @@ Once you are satisfied with your translation, click on the "Submit Translation" 
 The "Next" and "Previous" buttons can be used to navigate through the available stories in the collection. All work is saved in local storage, so you can feel free to browse the collection for stories you would like to translate, even if you have partly begun another translation.
 
 Click on the "Random Story" button to visit a random story from the collection. There are over 300 stories in the collection, all of different lengths, styles, and subject matter, so browse around until you see something you would be comfortable translating.
+
+## API
+
+The Translator features a simple API that allows you to link directly to individual stories for translation. Just add `?` and the [index number](https://global-asp.github.io/stories/master.html) of the story at the end of the url, for example:
+
+* `https://global-asp.github.io/translator/?0030`: links to translation template for story #0030
+
 
 ## License
 
