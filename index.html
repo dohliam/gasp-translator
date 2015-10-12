@@ -6,169 +6,79 @@
     <link rel="stylesheet" type="text/css" href="https://yegor256.github.io/tacit/tacit.min.css"/>
     <link rel="stylesheet" type="text/css" href="translator.css"/>
     <script src="stories.js" type="text/javascript"></script>
-    <script type="text/javascript">
-      function translate_story(nav) {
-        var story_table = document.getElementById("story_table");
-        var messages = document.getElementById("messages");
-        var translator = document.getElementById("translator");
-        var translator_div = document.getElementById("translator_div");
-        var idx_store = document.getElementById("idx");
-        var next = document.getElementById("nav_buttons");
-        var previous = document.getElementById("previous");
-        var translate_button = document.getElementById("translate_button");
-
-        n = parseInt(idx_store.innerHTML);
-
-        if (nav == "prev") {
-          n = n-2;
-        } else if (typeof nav == "number") {
-          n = nav;
-        }
-        idx = json[n].i;
-        title = json[n].t;
-        attribution = json[n].a.replace(/^(.)\|(.*?)\|(.*)/, "* License: [CC-$1]\n* Writer: $2\n* Illustration: $3\n* Language: English\n").replace(/,/g, ", ").replace(/CC\-b/, "CC-BY").replace(/CC\-n/, "CC-BY-NC");
-
-        sections = json[n].s;
-
-        content_div = "      <table id=\"content_table\">\n        <tr><th style='width:5%'></th><th style='width:30%'>original asp story</th><th style='width:65%'>your translation</th></tr><tr>\n          <td><img class=\"thumbnail\" src=\"https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/" + idx + "/01.jpg\"></td>\n          <td id=\"title\">Title: <i>" + title + "</i></td>\n          <td id=\"story_tgt_title\"><input type=\"text\" id=\"title_text\" /></td></tr><tr>\n"
-
-        messages.innerHTML = "Now translating story #" + idx + " - <i>" + title + "</i> into: <span class=\"editable\" contenteditable=\"true\" id=\"language\" placeholder=\"Target language\"></span>";
-        var language = document.getElementById("language");
-        language.setAttribute("oninput", "localStorage.l=this.innerHTML");
-        if (localStorage.l) {
-          language.innerText = localStorage.l;
-        }
-        if (localStorage.a) {
-          translator.innerText = localStorage.a;
-        }
-        translator_div.style.display = '';
-        translate_button.style.display = 'none';
-        nav_buttons.style.display = '';
-
-        for (var i = 0; i < sections.length; i++) {
-          page_number = i + 2;
-          if (page_number < 10) {
-            page_number = "0" + page_number;
-          }
-          content_div = content_div + "          <td><img class=\"thumbnail\" src=\"https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/" + idx + "/" + page_number + ".jpg\"></td>\n          <td id=\"story_src_" + i + "\">" + json[n].s[i][page_number] + "</td>\n          <td><textarea id=\"story_tgt_" + i + "\"></textarea></td>        </tr>"
-        }
-
-        translang = "Translation: " + translator.innerText + "<br>* Language: " + language.innerText;
-
-        story_table = document.getElementById("story_table");
-        attribution_row = "          <td></td>\n          <td id=\"attribution\">" + attribution.replace(/\n/g, "<br>") + "</td>\n          <td>" + attribution.replace(/\n/g, "<br>").replace(/Language: .*/, translang) + "</td>        </tr>";
-        story_table.innerHTML = content_div + attribution_row + "      </table>";
-
-        next.style.display = '';
-        idx_store.innerHTML = idx;
-        document.getElementById("number_of_sections").innerHTML = sections.length;
-
-        get_storage(idx);
-
-        document.getElementById("review_sub").style.display = '';
-
-      }
-
-      function get_storage(idx) {
-        number_of_sections = parseInt(document.getElementById("number_of_sections").innerHTML);
-        tr_title = document.getElementById("title_text");
-        tr_title.setAttribute("oninput", "localStorage.tr_" + idx + "_title=this.value");
-        if (localStorage["tr_" + idx + "_title"]) {
-          tr_title.value = localStorage["tr_" + idx + "_title"];
-        }
-        for (var i = 0; i < number_of_sections; i++) {
-          window["story_tgt_" + i].setAttribute("oninput", "localStorage.tr_" + idx + "_s_" + i + "=this.value");
-          if (localStorage["tr_" + idx + "_s_" + i]) {
-            window["story_tgt_" + i].value = localStorage["tr_" + idx + "_s_" + i];
-          }
-        }
-      }
-
-      function get_translation() {
-        tr_title = document.getElementById("title_text").value;
-        attribution = document.getElementById("attribution").innerHTML;
-        number_of_sections = parseInt(document.getElementById("number_of_sections").innerHTML);
-        var translator = document.getElementById("translator");
-        var language = document.getElementById("language");
-        translation_output = document.getElementById("translation_output");
-
-        format_content = "# " + tr_title + "\n\n##\n";
-        for (var i = 0; i < number_of_sections; i++) {
-          tr_text = document.getElementById("story_tgt_" + i).value;
-          format_content = format_content + tr_text + "\n\n##\n";
-        }
-        translang = "Translation: " + translator.innerText + "\n* Language: " + language.innerText;
-
-        window.output.style.display = '';
-        translation_output.value = format_content + attribution.replace(/<br>/g, "\n").replace(/Language: .*/, translang)
-
-        document.getElementById("submit_form").style.display = '';
-
-        prepare_submission();
-        
-      }
-      function story_api() {
-        var geturl = location.href;
-        if (/\?/.test(geturl) == true) {
-          var args = /\?(\d+)/.exec(geturl)[1];
-          number = parseInt(args) - 1;
-          translate_story(number);
-        }
-      }
-
-      function random_story() {
-        rand = Math.floor(Math.random()*364) + 1;
-        translate_story(rand);
-      }
-
-      function prepare_submission() {
-        var sub = document.getElementById("subject_line");
-        var rev = document.getElementById("review_sub");
-        sub.value = 'New translation: #' + window.idx + ', "' + window.title + '" into ' + window.language.innerHTML + " by " + window.translator.innerText;
-        window.name_line.value = window.translator.innerText;
-        window.story_number.value = window.idx;
-        window.story_language.value = window.language.innerHTML;
-        window.story_translation.value = window.translation_output.value;
-        rev.style.width = "80%";
-        rev.classList.remove("tooltip");
-        rev.innerHTML = "If you are satisfied with your translation, press the submit button below to send it for inclusion in the Global-ASP project:";
-      }
-
-    </script>
+    <script src="translator.js" type="text/javascript"></script>
   </head>
   <body onload="story_api()">
+    <div id="container">
+<div id="frametop">
     <h1>Global-ASP Translator</h1>
+    <div id="status_bar"><span id="permalink" style="display:none">&nbsp;</span><a href="#" onclick="overlay('about')">About</a><span class="dot"> • </span><a href="#" onclick="overlay('help')">Help</a><span class="dot"> • </span><a href="https://github.com/dohliam/gasp-translator" title="Project page on GitHub"><img src="https://cloud.githubusercontent.com/assets/9295750/10420174/4bff1bc4-7041-11e5-80d5-496a9cdd2672.png"></a><span id="nav_buttons" style="display:none"><span class="dot"> • </span><a href="#" id="prev" accesskey="p" title="Previous story" onclick="translate_story('prev')"><img src="previous.png"></a><span class="dot"> • </span><a href="#" accesskey="r" title="Random Story" onclick="random_story()"><img src="random.png"></a><span class="dot"> • </span><a href="#" id="next" accesskey="n" title="Next story" onclick="translate_story(0)"><img src="next.png"></a></span></div>
+</div>
+
+<div id="dynamic_content">
     <div id="messages">Welcome to the Global-ASP Translator!<br>To get started, press the Translate! button below.</div>
     <div id="translator_div" style="display:none">Translated by: <span class="editable" contenteditable="true" oninput="localStorage.a=this.innerHTML" id="translator" placeholder="Your name"></span></div>
-    <br>
+
     <div id="story_table">&nbsp;</div>
 
     <div id="translate_button">
-      <input type="button" value="Translate!" name="button1" accesskey="t" onclick="translate_story('first')">
+      <button type="button" accesskey="t" onclick="translate_story('first')">Translate!</button>
+    </div>
     </div>
     <br>
-    <div id="nav_buttons" style="display:none;">
-      <table>
-        <tr>
-          <td><a href="#" accesskey="p" onclick="translate_story('prev')"><img src="previous.png"></a></td>
-          <td><a href="#" accesskey="r" onclick="random_story()"><img src="random.png"></a></td>
-          <td><a href="#" accesskey="n" onclick="translate_story('next')"><img src="next.png"></a></td></tr><tr><td>Previous story</td><td>Random Story</td><td>Next story</td>
-        </tr>
-      </table>
-    </div>
 
+<div id="framebottom">
     <div id="idx" style="display:none;">0000</div>
+    <div id="serial" style="display:none;">0</div>
     <div id="number_of_sections" style="display:none;">&nbsp;</div>
 
     <div id="output" style="display:none">
       <textarea id="translation_output" rows="10"></textarea>
     </div>
     <div id="review_sub" class="tooltip" style="display:none">
-      <input type="button" value="Review submission" accesskey="g" name="button2" onclick="get_translation()">
+      <button id="rev_btn" type="button" accesskey="g" onclick="review_translation()">Review submission</button>
     </div>
 
-    <div id="submit_form" style="display:none">
-      <form action="http://formspree.io/globalafricanstorybook@gmail.com" method="post">
+    <div id="about" class="modal" style="display:none;" onclick="overlay('about')">
+      <div class="modcontent">
+        <h2>About<a href="#" class="closemodal" title="Click here to close">X</a></h2>
+        <p>Global-ASP Translator - Translation system for the <a href="https://global-asp.github.io/">Global African Storybook Project</a></p>
+        <p>This is intended to be an easy-to-use and accessible translation system to help automate the process of translating <a href="http://africanstorybook.org/">African Storybook Project</a> stories into other languages for <a href="https://global-asp.github.io/">Global-ASP</a>.</p>
+        <p>It has deliberately been kept as minimal as possible to allow translators to focus on the work (and joy) of translation with as little distraction as possible.</p>
+        <p>Stories are presented in order of length, from shortest to longest, to make the barrier to entry as low as possible for anyone who would like to participate in the project and contribute a translation. If you can only translate a few sentences or a few words, you can still help!</p>
+        <p>All of the ASP and Global-ASP stories are <a href="http://creativecommons.org/">Creative Commons-licensed</a>. By contributing a translation to the project you agree to release your work under a Creative Commons license (either <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY</a> or <a href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC</a>) in accordance with the license of the original story.</p>
+      </div>
+    </div>
+
+    <div id="help" class="modal" style="display:none;" onclick="overlay('help')">
+      <div class="modcontent">
+        <h2>Help<a href="#" class="closemodal" title="Click here to close">X</a></h2>
+        <h3>Usage</h3>
+        <p>To begin translating stories, just click on the "Translate!" button at the bottom of the page. This will open up a story from the <a href="http://africanstorybook.org/">African Storybook Project</a> collection, with empty space on the right for you to enter your translation.</p>
+        <p>Make sure to enter your name and the language you are translating into at the top of the page. Your work will be released under the same <a href="http://creativecommons.org/">Creative Commons</a> license as the original story, and you will be credited for attribution using the name you select here. You can edit either field at any time, for example if you want to change the way you are attributed or translate into a different language.</p>
+        <p>Within the main translation area of the page, images from each page of the story will appear on the left side accompanied by the original text of that page. On the far right side is a box where you can input your translation. You can hover over the image thumbnails to see larger versions of the pictures.</p>
+        <p>If you have completed part of a translation but want to move on to another story or close the window, the text you have entered in each box will be saved automatically on your local machine so you can return to it later. Note that it will <strong>NOT</strong> be submitted until you click on the "Review submission" button and then finally scroll down and click on "Submit Translation" to send it to <a href="https://global-asp.github.io">Global-ASP</a> for inclusion in the project.</p>
+        <p>When you click on the "Review submission" button, a window will appear on screen containing the formatted text of your translation alongside the original story images. If there is anything you would like to add or change you can exit this window by clicking on the close button in the top right corner and make your changes in the translation area before submitting. To go back to the review window, click on the "Continue reviewing" button at the bottom of the page.</p>
+        <p>Once you are satisfied with your translation in the Review window, click on the "Submit Translation" button to send it for inclusion in <a href="https://global-asp.github.io">Global-ASP</a>. You can optionally include your email address in the box above the submit button if you would like us to be able to contact you about your translation.</p>
+        <h3>Navigation</h3>
+        <p>The "Next" and "Previous" arrow buttons located at the top of the page can be used to navigate through the available stories in the collection. All work is saved in local storage, so you can feel free to browse the collection for stories you would like to translate, even if you have already begun working on another translation.</p>
+        <p>Click on the "Random Story" button to visit a random story from the collection. There are over 300 stories in the collection, all of different lengths, styles, and subject matter, so go ahead and browse around until you see something you would be comfortable translating!</p>
+        <h3>Linking to stories</h3>
+        <p>You can link directly to individual stories for translation using the Translator's simple API. Just add <code>?</code> and the story's <a href="https://global-asp.github.io/stories/master.html">index number</a> to the end of the Translator url. For example:</p>
+        <ul><li><code>https://global-asp.github.io/translator/?0030</code> (this links to the translation template for story #0030)</li></ul>
+        <p>Try it out by clicking on <a href="https://global-asp.github.io/translator/?0030">this link</a>!</p>
+      </div>
+    </div>
+
+    <div id="final" class="modal" style="display:none;">
+      <div class="modcontent">
+        <h2>Review<a href="#" class="closemodal" title="Click here to close" onclick="overlay('final')">X</a></h2>
+        <div id="review_table">&nbsp;</div>
+
+        <div id="rev_msg">&nbsp;</div><br>
+
+        <div id="submit_form" style="display:none">
+          <form action="http://formspree.io/globalafricanstorybook@gmail.com" method="post">
             <input type="hidden" type="final" name="name" id="name_line">
             <input type="text" name="_replyto" placeholder="Your email (optional)" />
             <input type="hidden" name="_next" value="/translator/thanks.html" />
@@ -177,7 +87,13 @@
             <input type="hidden" name="story_language" id="story_language" value="" />
             <input type="hidden" name="story_translation" id="story_translation" value="" />
             <input type="submit" value="Submit Translation">
-      </form>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">esc_out();</script>
+    </div>
     </div>
 
   </body>
