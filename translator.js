@@ -84,6 +84,9 @@ function get_storage(idx) {
       window["story_tgt_" + i].value = localStorage["tr_" + idx + "_s_" + i];
     }
   }
+  if (localStorage["email"]) {
+    document.getElementById("email").value = localStorage["email"];
+  }
 }
 
 function review_translation() {

@@ -80,7 +80,7 @@
         <div id="submit_form" style="display:none">
           <form action="http://formspree.io/globalafricanstorybook@gmail.com" method="post">
             <input type="hidden" type="final" name="name" id="name_line">
-            <input type="text" name="_replyto" placeholder="Your email (optional)" />
+            <input type="text" id="email" name="_replyto" placeholder="Your email (optional)" oninput="localStorage.email=this.value" />
             <input type="hidden" name="_next" value="/translator/thanks.html" />
             <input type="hidden" name="_subject" id="subject_line" value="New submission!" />
             <input type="hidden" name="story_number" id="story_number" value="" />
