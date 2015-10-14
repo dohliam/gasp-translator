@@ -126,6 +126,8 @@ function review_translation() {
   var review_table = document.getElementById("review_table");
   review_table.innerHTML = content_div + "<tr><td></td><td>" + format_attribution + "</td></tr></table>";
 
+  document.getElementById("thanks").value = "/translator/thanks.html?" + idx;
+
   overlay('final');
 
   prepare_submission();
