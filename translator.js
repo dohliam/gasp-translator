@@ -151,7 +151,7 @@ function story_api() {
 }
 
 function random_story() {
-  rand = Math.floor(Math.random()*364);
+  rand = Math.floor(Math.random()*json.length);
   translate_story(rand);
 }
 
