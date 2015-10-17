@@ -17,7 +17,7 @@
 
 <div id="dynamic_content">
     <div id="messages">Welcome to the Global-ASP Translator!<br>To get started, press the Translate! button below.</div>
-    <div id="translator_div" style="display:none">Translated by: <span class="editable" contenteditable="true" oninput="localStorage.a=this.innerHTML" id="translator" placeholder="Your name"></span></div>
+    <div id="translator_div" style="display:none">Translated by: <span class="editable" contenteditable="true" oninput="localStorage['gtr_a']=this.innerHTML" id="translator" placeholder="Your name"></span></div>
 
     <div id="story_table">&nbsp;</div>
 
@@ -80,7 +80,7 @@
         <div id="submit_form" style="display:none">
           <form action="https://formspree.io/globalafricanstorybook@gmail.com" method="post">
             <input type="hidden" type="final" name="name" id="name_line">
-            <input type="text" id="email" name="_replyto" placeholder="Your email (optional)" oninput="localStorage.email=this.value" />
+            <input type="text" id="email" name="_replyto" placeholder="Your email (optional)" oninput="localStorage['gtr_email']=this.value" />
             <input id="thanks" type="hidden" name="_next" value="/translator/thanks.html" />
             <input type="hidden" name="_subject" id="subject_line" value="New submission!" />
             <input type="hidden" name="story_number" id="story_number" value="" />

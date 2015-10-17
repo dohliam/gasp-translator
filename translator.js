@@ -27,12 +27,12 @@ function translate_story(nav) {
 
   messages.innerHTML = "Now translating story #" + idx + " - <i>" + title + "</i> into: <span class=\"editable\" contenteditable=\"true\" id=\"language\" placeholder=\"Target language\"></span>";
   var language = document.getElementById("language");
-  language.setAttribute("oninput", "localStorage.l=this.innerHTML");
-  if (localStorage.l) {
-    language.innerText = localStorage.l;
+  language.setAttribute("oninput", "localStorage['gtr_l']=this.innerHTML");
+  if (localStorage["gtr_l"]) {
+    language.innerText = localStorage["gtr_l"];
   }
-  if (localStorage.a) {
-    translator.innerText = localStorage.a;
+  if (localStorage["gtr_a"]) {
+    translator.innerText = localStorage["gtr_a"];
   }
   translator_div.style.display = '';
   translate_button.style.display = 'none';
@@ -75,18 +75,18 @@ function translate_story(nav) {
 function get_storage(idx) {
   number_of_sections = parseInt(document.getElementById("number_of_sections").innerHTML);
   tr_title = document.getElementById("title_text");
-  tr_title.setAttribute("oninput", "localStorage.tr_" + idx + "_title=this.value");
-  if (localStorage["tr_" + idx + "_title"]) {
-    tr_title.value = localStorage["tr_" + idx + "_title"];
+  tr_title.setAttribute("oninput", "localStorage['gtr_" + idx + "_title']=this.value");
+  if (localStorage["gtr_" + idx + "_title"]) {
+    tr_title.value = localStorage["gtr_" + idx + "_title"];
   }
   for (var i = 0; i < number_of_sections; i++) {
-    window["story_tgt_" + i].setAttribute("oninput", "localStorage.tr_" + idx + "_s_" + i + "=this.value");
-    if (localStorage["tr_" + idx + "_s_" + i]) {
-      window["story_tgt_" + i].value = localStorage["tr_" + idx + "_s_" + i];
+    window["story_tgt_" + i].setAttribute("oninput", "localStorage['gtr_" + idx + "_s_" + i + "']=this.value");
+    if (localStorage["gtr_" + idx + "_s_" + i]) {
+      window["story_tgt_" + i].value = localStorage["gtr_" + idx + "_s_" + i];
     }
   }
-  if (localStorage["email"]) {
-    document.getElementById("email").value = localStorage["email"];
+  if (localStorage["gtr_email"]) {
+    document.getElementById("email").value = localStorage["gtr_email"];
   }
 }
 
@@ -121,7 +121,7 @@ function review_translation() {
 
   document.getElementById("submit_form").style.display = '';
 
-  format_attribution = "<ul>" + attribution + "* " + translang.replace(/\n/g, "<br>") + "</ul>";
+  format_attribution = "<ul>" + attribution.replace(/Language: .*/, "") + translang.replace(/\n/g, "<br>") + "</ul>";
   format_attribution = format_attribution.replace(/\* (.*?)</g, "<li>$1</li><").replace(/<br>/g, "");
 
   var review_table = document.getElementById("review_table");
