@@ -65,6 +65,7 @@ function translate_story(nav) {
   document.getElementById("number_of_sections").innerHTML = sections.length;
 
   get_storage(idx);
+  tr_title.focus();
 
   document.getElementById("rev_btn").innerHTML = "Review submission";
   document.getElementById("review_sub").style.display = '';
