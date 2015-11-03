@@ -3,59 +3,56 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
     <title>Global-ASP Translator</title>
+    <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" type="text/css" href="https://yegor256.github.io/tacit/tacit.min.css"/>
-    <link rel="stylesheet" type="text/css" href="translator.css"/>
-    <script src="stories.js" type="text/javascript"></script>
-    <script src="translator.js" type="text/javascript"></script>
-    <script src="completed.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="css/translator.css"/>
+    <link rel="stylesheet" type="text/css" href="css/modal.css" />
+
+    <script src="js/stories.js" type="text/javascript"></script>
+    <script src="js/translator.js" type="text/javascript"></script>
+    <script src="js/completed.js" type="text/javascript"></script>
   </head>
   <body onload="story_api()">
-    <div id="container">
-<div id="frametop">
+
+  <div id="frametop">
     <h1>Global-ASP Translator</h1>
-    <div id="status_bar"><span id="permalink" style="display:none">&nbsp;</span><a href="#" onclick="overlay('about')">About</a><span class="dot"> • </span><a href="#" onclick="overlay('help')">Help</a><span class="dot"> • </span><a href="https://github.com/dohliam/gasp-translator" title="Project page on GitHub"><img src="https://cloud.githubusercontent.com/assets/9295750/10420174/4bff1bc4-7041-11e5-80d5-496a9cdd2672.png"></a><span id="nav_buttons" style="display:none"><span class="dot"> • </span><a href="#" id="prev" accesskey="p" title="Previous story" onclick="translate_story('prev')"><img src="previous.png"></a><span class="dot"> • </span><a href="#" accesskey="r" title="Random Story" onclick="random_story()"><img src="random.png"></a><span class="dot"> • </span><a href="#" id="next" accesskey="n" title="Next story" onclick="translate_story(0)"><img src="next.png"></a></span></div>
+    <div id="status_bar"><span id="permalink" style="display:none">&nbsp;</span><a href="#modal-about" class="call-modal" title="Clicking this link shows the modal">About</a><span class="dot"> • </span><a href="#modal-help" class="call-modal">Help</a><span class="dot"> • </span><a href="https://github.com/dohliam/gasp-translator" title="Project page on GitHub"><img src="https://cloud.githubusercontent.com/assets/9295750/10420174/4bff1bc4-7041-11e5-80d5-496a9cdd2672.png"></a><span id="nav_buttons" style="display:none"><span class="dot"> • </span><a href="#" id="prev" accesskey="p" title="Previous story" onclick="translate_story('prev')"><img src="previous.png"></a><span class="dot"> • </span><a href="#" accesskey="r" title="Random Story" onclick="random_story()"><img src="random.png"></a><span class="dot"> • </span><a href="#" id="next" accesskey="n" title="Next story" onclick="translate_story(0)"><img src="next.png"></a></span></div>
 </div>
 
-<div id="dynamic_content">
-    <div id="messages">Welcome to the Global-ASP Translator!<br>To get started, press the Translate! button below.</div>
-    <div id="translated_msg" style="display:none">&nbsp;</div>
-    <div id="translator_div" style="display:none">Translated by: <span class="editable" contenteditable="true" oninput="localStorage['gtr_a']=this.innerHTML" id="translator" placeholder="Your name"></span></div>
+      <!-- A modal with its content -->
+      <section class="modal--show" id="modal-about" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
 
-    <div id="story_table">&nbsp;</div>
+        <div class="modal-inner">
+          <header>
+            <h2 id="modal-label">About</h2>
+          </header>
 
-    <div id="translate_button">
-      <button type="button" accesskey="t" onclick="translate_story('first')">Translate!</button>
-    </div>
-    </div>
-    <br>
-
-<div id="framebottom">
-    <div id="idx" style="display:none;">0000</div>
-    <div id="serial" style="display:none;">0</div>
-    <div id="number_of_sections" style="display:none;">&nbsp;</div>
-
-    <div id="output" style="display:none">
-      <textarea id="translation_output" rows="10"></textarea>
-    </div>
-    <div id="review_sub" class="tooltip" style="display:none">
-      <button id="rev_btn" type="button" accesskey="g" onclick="review_translation()">Review submission</button>
-    </div>
-
-    <div id="about" class="modal" style="display:none;" onclick="overlay('about')">
-      <div class="modcontent">
-        <h2>About<a href="#" class="closemodal" title="Click here to close">X</a></h2>
+        <div class="modal-content">
         <p>Global-ASP Translator - Translation system for the <a href="https://global-asp.github.io/">Global African Storybook Project</a></p>
         <p>This is intended to be an easy-to-use and accessible translation system to help automate the process of translating <a href="http://africanstorybook.org/">African Storybook Project</a> stories into other languages for <a href="https://global-asp.github.io/">Global-ASP</a>.</p>
         <p>It has deliberately been kept as minimal as possible to allow translators to focus on the work (and joy) of translation with as little distraction as possible.</p>
         <p>Stories are presented in order of length, from shortest to longest, to make the barrier to entry as low as possible for anyone who would like to participate in the project and contribute a translation. If you can only translate a few sentences or a few words, you can still help!</p>
         <p>All of the ASP and Global-ASP stories are <a href="http://creativecommons.org/">Creative Commons-licensed</a>. By contributing a translation to the project you agree to release your work under a Creative Commons license (either <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY</a> or <a href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC</a>) in accordance with the license of the original story.</p>
-      </div>
-    </div>
+          </div>
+        </div>
 
-    <div id="help" class="modal" style="display:none;" onclick="overlay('help')">
-      <div class="modcontent">
-        <h2>Help<a href="#" class="closemodal" title="Click here to close">X</a></h2>
-        <h3>Usage</h3>
+        <!-- Use Hash-Bang to maintain scroll position when closing modal -->
+        <a href="#!" class="modal-close" title="Close this modal" data-dismiss="modal" data-close="Close">&times;</a>
+      </section>
+
+
+
+
+      <!-- A modal with its content -->
+      <section class="modal--show" id="modal-help" tabindex="-1"
+        role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+
+        <div class="modal-inner">
+          <header>
+            <h2 id="modal-label">Help</h2>
+          </header>
+
+        <div class="modal-content">
         <p>To begin translating stories, just click on the "Translate!" button at the bottom of the page. This will open up a story from the <a href="http://africanstorybook.org/">African Storybook Project</a> collection, with empty space on the right for you to enter your translation.</p>
         <p>Make sure to enter your name and the language you are translating into at the top of the page. Your work will be released under the same <a href="http://creativecommons.org/">Creative Commons</a> license as the original story, and you will be credited for attribution using the name you select here. You can edit either field at any time, for example if you want to change the way you are attributed or translate into a different language.</p>
         <p>Within the main translation area of the page, images from each page of the story will appear on the left side accompanied by the original text of that page. On the far right side is a box where you can input your translation. You can hover over the image thumbnails to see larger versions of the pictures.</p>
@@ -69,35 +66,84 @@
         <p>You can link directly to individual stories for translation using the Translator's simple API. Just add <code>?</code> and the story's <a href="https://global-asp.github.io/stories/master.html">index number</a> to the end of the Translator url. For example:</p>
         <ul><li><code>https://global-asp.github.io/translator/?0030</code> (this links to the translation template for story #0030)</li></ul>
         <p>Try it out by clicking on <a href="https://global-asp.github.io/translator/?0030">this link</a>!</p>
-      </div>
+          </div>
+        </div>
+
+        <!-- Use Hash-Bang to maintain scroll position when closing modal -->
+        <a href="#!" class="modal-close" title="Close this modal" data-dismiss="modal" data-close="Close">&times;</a>
+      </section>
+
+      <!-- A modal with its content -->
+      <section class="modal--show" id="modal-review" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+
+        <div class="modal-inner">
+          <header>
+            <h2 id="modal-label">Review</h2>
+          </header>
+
+          <div class="modal-content">
+            <div id="review_table">&nbsp;</div>
+
+            <div id="rev_msg">&nbsp;</div><br>
+
+            <div id="submit_form" style="display:none">
+              <form action="https://formspree.io/globalafricanstorybook@gmail.com" method="post">
+                <input type="hidden" type="final" name="name" id="name_line">
+                <input type="text" id="email" name="_replyto" placeholder="Your email (optional)" oninput="localStorage['gtr_email']=this.value" />
+                <input id="thanks" type="hidden" name="_next" value="/translator/thanks.html" />
+                <input type="hidden" name="_subject" id="subject_line" value="New submission!" />
+                <input type="hidden" name="story_number" id="story_number" value="" />
+                <input type="hidden" name="story_language" id="story_language" value="" />
+                <input type="hidden" name="md_title" id="md_title" value="" />
+                <input type="hidden" name="story_translation" id="story_translation" value="" />
+                <input type="submit" value="Submit Translation">
+              </form>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Use Hash-Bang to maintain scroll position when closing modal -->
+        <a href="#!" class="modal-close" title="Close this modal" data-dismiss="modal" data-close="Close">&times;</a>
+      </section>
+
+
+<div id="dynamic_content">
+    <div id="messages">Welcome to the Global-ASP Translator!<br>To get started, press the Translate! button below.</div>
+    <div id="translated_msg" style="display:none">&nbsp;</div>
+    <div id="translator_div" style="display:none">Translated by: <span class="editable" contenteditable="true" oninput="localStorage['gtr_a']=this.innerHTML" id="translator" placeholder="Your name"></span></div>
+
+    <div id="story_table">&nbsp;</div>
+
+    <div id="translate_button">
+      <button type="button" accesskey="t" onclick="translate_story('first')">Translate!</button>
     </div>
+  </div>
+</div>
+    <br>
+
+<div id="framebottom">
+    <div id="idx" style="display:none;">0000</div>
+    <div id="serial" style="display:none;">0</div>
+    <div id="number_of_sections" style="display:none;">&nbsp;</div>
+
+    <div id="output" style="display:none">
+      <textarea id="translation_output" rows="10"></textarea>
+    </div>
+    <div id="review_sub" class="tooltip" style="display:none">
+      <a href="#modal-review" class="call-modal" onclick="review_translation()"><button id="rev_btn" type="button" accesskey="g">Review submission</button></a>
+    </div>
+
 
     <div id="final" class="modal" style="display:none;">
       <div class="modcontent">
         <h2>Review<a href="#" class="closemodal" title="Click here to close" onclick="overlay('final')">X</a></h2>
-        <div id="review_table">&nbsp;</div>
-
-        <div id="rev_msg">&nbsp;</div><br>
-
-        <div id="submit_form" style="display:none">
-          <form action="https://formspree.io/globalafricanstorybook@gmail.com" method="post">
-            <input type="hidden" type="final" name="name" id="name_line">
-            <input type="text" id="email" name="_replyto" placeholder="Your email (optional)" oninput="localStorage['gtr_email']=this.value" />
-            <input id="thanks" type="hidden" name="_next" value="/translator/thanks.html" />
-            <input type="hidden" name="_subject" id="subject_line" value="New submission!" />
-            <input type="hidden" name="story_number" id="story_number" value="" />
-            <input type="hidden" name="story_language" id="story_language" value="" />
-            <input type="hidden" name="md_title" id="md_title" value="" />
-            <input type="hidden" name="story_translation" id="story_translation" value="" />
-            <input type="submit" value="Submit Translation">
-          </form>
-        </div>
       </div>
     </div>
 
     <script type="text/javascript">esc_out();</script>
     </div>
-    </div>
 
+  <script src="js/modal.js"></script>
   </body>
 </html>
