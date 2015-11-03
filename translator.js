@@ -40,7 +40,7 @@ function translate_story(nav) {
 
   check_lang();
 
-  url = location.href.replace(/\?.*/, "");
+  url = location.href.replace(/[#\?]+.*/, "");
   permalink.style.display = '';
   permalink.innerHTML = "<a href=\"" + url + "?" + idx + "\">Permalink to this story</a><span class=\"dot\"> • </span>";
   for (var i = 0; i < sections.length; i++) {
