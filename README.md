@@ -32,6 +32,46 @@ The Translator features a simple API that allows you to link directly to individ
 
 * `https://global-asp.github.io/translator/?0030`: links to translation template for story #0030
 
+## Data format
+
+The file `stories.js` contains an array of JSON objects, each of which represents a story from the ASP collection. The format is described below. By replacing the data in `stories.js` with your own data, it is possible to use gasp-translator as a general-purpose translation tool. This has already been done as a way of providing translation from languages other than English, by generating JSON objects from e.g. French, Yoruba, or Norwegian markdown source files.
+
+Here is a simple example from the `stories.js` file of a storybook represented as a JSON object:
+
+    {"i":"0253","t":"My Picture Book","a":"b|Oku Modesto|Rob Owen,Marleen Visser,Katrien Coetzer,Wiehan de Jager,Karen Lilje,Catherine Groenewald,Alice Toich","s":[{"02":"A girl"},{"03":"A bird"},{"04":"A lion"},{"05":"A cat"}]}
+
+This has been compressed (spaces and linebreaks removed) to save space. A more human-readable representation of the same data would look like this:
+
+    {
+        "i": "0253",
+        "t": "My Picture Book",
+        "a": "b|Oku Modesto|Rob Owen,Marleen Visser,Katrien Coetzer,Wiehan de Jager,Karen Lilje,Catherine Groenewald,Alice Toich",
+        "s": [
+            {
+                "02": "A girl"
+            },
+            {
+                "03": "A bird"
+            },
+            {
+                "04": "A lion"
+            },
+            {
+                "05": "A cat"
+            }
+        ]
+    }
+
+Keys:
+* `"i"`: The index number of the story
+* `"t"`: The title of the story
+* `"a"`: Attribution information for the story, separated by vertical bars (`|`)
+    * A `b` in the initial position means that the story is licensed "CC-BY", and an `n` means it is licensed "CC-BY-NC"
+    * The author of the story
+    * The illustrator(s) of the story images
+* `"s"`: An array of JSON objects representing the full text content of the story, with each object representing a page
+
+
 
 ## License
 
