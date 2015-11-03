@@ -2,10 +2,10 @@ h1 {
   margin-top: 0;
 }
 #container {
-position: fixed; 
+position: fixed;
 top: 0px;
 bottom: 50px;
-overflow: auto; 
+overflow: auto;
 }
 #frametop, #framebottom {
 position: fixed; 
