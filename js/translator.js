@@ -100,7 +100,6 @@ function review_translation() {
   var language = document.getElementById("language");
   translation_output = document.getElementById("translation_output");
   var container = document.getElementById("container");
-//   var review_content = document.getElementById("review_content");
 
   content_div = "      <table id=\"content_table\">\n        <tr><th style='width:25%'></th><th style='width:65%'>your translation</th></tr><tr>\n          <td><img class=\"revthumb\" src=\"https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/" + idx + "/01.jpg\"></td>\n          <td><em>" + tr_title + "</em></td></tr><tr>\n";
 
@@ -131,8 +130,6 @@ function review_translation() {
   review_table.innerHTML = content_div + "<tr><td></td><td>" + format_attribution + "</td></tr></table>";
 
   document.getElementById("thanks").value = "/translator/thanks.html?" + idx;
-
-//   overlay('final');
 
   prepare_submission();
   
@@ -171,19 +168,6 @@ function prepare_submission() {
   rev.classList.remove("tooltip");
   window.rev_btn.innerHTML = '<a href="#modal-review" class="call-modal" onclick="review_translation()">Continue reviewing</a>';
   window.rev_msg.innerHTML = "If you are satisfied with your translation, press the submit button below to send it for inclusion in the Global-ASP project:";
-}
-
-function overlay(w) {
-  el = "";
-  if (w == "about") {
-    el = document.getElementById("about");
-  } else if (w == "help") {
-    el = document.getElementById("help");
-  } else if (w == "final") {
-    el = document.getElementById("final");
-  }
-  el.style.display = (el.style.display == "none") ? "" : "none";
-  el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
 }
 
 function check_lang() {

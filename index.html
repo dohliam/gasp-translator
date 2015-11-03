@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html manifest="offline.appcache">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
     <title>Global-ASP Translator</title>
@@ -11,6 +11,19 @@
     <script src="js/stories.js" type="text/javascript"></script>
     <script src="js/translator.js" type="text/javascript"></script>
     <script src="js/completed.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      // Check manifest
+      window.addEventListener('load', function(e) {
+        window.applicationCache.addEventListener('updateready', function(e) {
+          if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+            window.applicationCache.swapCache();
+            window.location.reload();
+          } else {
+          // Manifest didn't change. Nothing new to serve.
+          }
+        }, false);
+      }, false);
+    </script>
   </head>
   <body onload="story_api()">
 
@@ -19,7 +32,6 @@
     <div id="status_bar"><span id="permalink" style="display:none">&nbsp;</span><a href="#modal-about" class="call-modal" title="Clicking this link shows the modal">About</a><span class="dot"> • </span><a href="#modal-help" class="call-modal">Help</a><span class="dot"> • </span><a href="https://github.com/dohliam/gasp-translator" title="Project page on GitHub"><img src="https://cloud.githubusercontent.com/assets/9295750/10420174/4bff1bc4-7041-11e5-80d5-496a9cdd2672.png"></a><span id="nav_buttons" style="display:none"><span class="dot"> • </span><a href="#" id="prev" accesskey="p" title="Previous story" onclick="translate_story('prev')"><img src="previous.png"></a><span class="dot"> • </span><a href="#" accesskey="r" title="Random Story" onclick="random_story()"><img src="random.png"></a><span class="dot"> • </span><a href="#" id="next" accesskey="n" title="Next story" onclick="translate_story(0)"><img src="next.png"></a></span></div>
 </div>
 
-      <!-- A modal with its content -->
       <section class="modal--show" id="modal-about" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
 
         <div class="modal-inner">
@@ -36,14 +48,9 @@
           </div>
         </div>
 
-        <!-- Use Hash-Bang to maintain scroll position when closing modal -->
         <a href="#!" class="modal-close" title="Close this modal" data-dismiss="modal" data-close="Close">&times;</a>
       </section>
 
-
-
-
-      <!-- A modal with its content -->
       <section class="modal--show" id="modal-help" tabindex="-1"
         role="dialog" aria-labelledby="modal-label" aria-hidden="true">
 
@@ -69,11 +76,9 @@
           </div>
         </div>
 
-        <!-- Use Hash-Bang to maintain scroll position when closing modal -->
         <a href="#!" class="modal-close" title="Close this modal" data-dismiss="modal" data-close="Close">&times;</a>
       </section>
 
-      <!-- A modal with its content -->
       <section class="modal--show" id="modal-review" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
 
         <div class="modal-inner">
@@ -103,7 +108,6 @@
           </div>
         </div>
 
-        <!-- Use Hash-Bang to maintain scroll position when closing modal -->
         <a href="#!" class="modal-close" title="Close this modal" data-dismiss="modal" data-close="Close">&times;</a>
       </section>
 
@@ -134,14 +138,6 @@
       <a href="#modal-review" class="call-modal" onclick="review_translation()"><button id="rev_btn" type="button" accesskey="g">Review submission</button></a>
     </div>
 
-
-    <div id="final" class="modal" style="display:none;">
-      <div class="modcontent">
-        <h2>Review<a href="#" class="closemodal" title="Click here to close" onclick="overlay('final')">X</a></h2>
-      </div>
-    </div>
-
-    <script type="text/javascript">esc_out();</script>
     </div>
 
   <script src="js/modal.js"></script>
