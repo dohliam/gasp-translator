@@ -84,3 +84,5 @@ The full text of the original ASP stories is derived from the [asp-source repo](
 [Tacit CSS](https://github.com/yegor256/tacit/) by Yegor Bugayenko is licensed under MIT.
 
 Submissions are handled by [Formspree](http://formspree.io/).
+
+Pure CSS modals within the app are made possible by [drublic](https://github.com/drublic)'s [css-modal](https://github.com/drublic/css-modal) project.
