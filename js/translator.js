@@ -27,12 +27,12 @@ function translate_story(nav) {
 
   messages.innerHTML = "Now translating story #" + idx + " - <i>" + title + "</i> into: <span class=\"editable\" contenteditable=\"true\" id=\"language\" placeholder=\"Target language\"></span>";
   var language = document.getElementById("language");
-  language.setAttribute("oninput", "check_lang()");
+  language.setAttribute("oninput", "localStorage['gtr_l']=this.innerHTML; check_lang();");
   if (localStorage["gtr_l"]) {
-    language.innerText = localStorage["gtr_l"];
+    language.innerHTML = localStorage["gtr_l"];
   }
   if (localStorage["gtr_a"]) {
-    translator.innerText = localStorage["gtr_a"];
+    translator.innerHTML = localStorage["gtr_a"];
   }
   translator_div.style.display = '';
   translate_button.style.display = 'none';
@@ -51,7 +51,7 @@ function translate_story(nav) {
     content_div = content_div + "          <td><img class=\"thumbnail\" src=\"https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/" + idx + "/" + page_number + ".jpg\"></td>\n          <td id=\"story_src_" + i + "\">" + json[n].s[i][page_number] + "</td>\n          <td><textarea id=\"story_tgt_" + i + "\"></textarea></td>        </tr>"
   }
 
-  translang = "Translation: " + translator.innerText + "<br>* Language: " + language.innerText;
+  translang = "Translation: " + translator.innerHTML + "<br>* Language: " + language.innerHTML;
 
   story_table = document.getElementById("story_table");
   attribution_row = "          <td></td>\n          <td id=\"attribution\">" + attribution.replace(/\n/g, "<br>") + "</td>\n          <td>" + attribution.replace(/\n/g, "<br>").replace(/Language: .*/, translang) + "</td>        </tr>";
@@ -117,7 +117,7 @@ function review_translation() {
     }
 
   }
-  translang = "Translation: " + translator.innerText + "\n* Language: " + language.innerText;
+  translang = "Translation: " + translator.innerHTML + "\n* Language: " + language.innerHTML;
 
   translation_output.value = format_content + attribution.replace(/<br>/g, "\n").replace(/Language: .*/, translang);
 
@@ -158,8 +158,8 @@ function random_story() {
 function prepare_submission() {
   var sub = document.getElementById("subject_line");
   var rev = document.getElementById("review_sub");
-  sub.value = 'New translation: #' + window.idx + ', "' + window.title + '" into ' + window.language.innerHTML + " by " + window.translator.innerText;
-  window.name_line.value = window.translator.innerText;
+  sub.value = 'New translation: #' + window.idx + ', "' + window.title + '" into ' + window.language.innerHTML + " by " + window.translator.innerHTML;
+  window.name_line.value = window.translator.innerHTML;
   window.story_number.value = window.idx;
   window.story_language.value = window.language.innerHTML;
   window.md_title.value = window.idx + "_" + window.title_text.value.toLowerCase().replace(/ /g, "-").replace(/[\!\?,\.:'¿¡`]/g, "") + ".md";
