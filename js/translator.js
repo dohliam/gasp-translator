@@ -42,7 +42,7 @@ function translate_story(nav) {
 
   var myurl = location.href.replace(/[#\?\!]+.*/, "");
   permalink.style.display = '';
-  permalink.innerHTML = "<a href=\"" + myurl + "#story-" + idx + "\">Permalink to this story</a><span class=\"dot\"> • </span>";
+  permalink.innerHTML = "<a href=\"" + myurl + "#" + idx + "\">Permalink to this story</a><span class=\"dot\"> • </span>";
   for (var i = 0; i < sections.length; i++) {
     page_number = i + 2;
     if (page_number < 10) {
@@ -72,7 +72,7 @@ function translate_story(nav) {
   document.getElementById("review_sub").style.display = '';
 
   if (typeof window.location.hash !== 'undefined') {
-    window.location.hash = 'story-' + idx;
+    window.location.hash = '' + idx;
   }
 }
 
@@ -139,8 +139,8 @@ function review_translation() {
 
 function story_api() {
   var geturl = location.href;
-  if (/#story-\d/.test(geturl) == true) {
-    var args = /#story-(\d+)/.exec(geturl)[1];
+  if (/[#\?]\d/.test(geturl) == true) {
+    var args = /[#\?](\d+)/.exec(geturl)[1];
     serial = 0;
     for (var n = 0; n < json.length; n++) {
       if (json[n].i == args) {
