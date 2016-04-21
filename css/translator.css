@@ -154,3 +154,8 @@ button a {
   width: 75%;
   left: 35%;
 }
+#nav_buttons button {
+  border: none;
+  background: transparent;
+  padding: 0;
+}

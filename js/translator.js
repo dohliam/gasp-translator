@@ -40,9 +40,9 @@ function translate_story(nav) {
 
   check_lang();
 
-  url = location.href.replace(/[#\?\!]+.*/, "");
+  var myurl = location.href.replace(/[#\?\!]+.*/, "");
   permalink.style.display = '';
-  permalink.innerHTML = "<a href=\"" + url + "?" + idx + "\">Permalink to this story</a><span class=\"dot\"> • </span>";
+  permalink.innerHTML = "<a href=\"" + myurl + "#story-" + idx + "\">Permalink to this story</a><span class=\"dot\"> • </span>";
   for (var i = 0; i < sections.length; i++) {
     page_number = i + 2;
     if (page_number < 10) {
@@ -65,13 +65,15 @@ function translate_story(nav) {
   idx_store.innerHTML = idx;
   serial_store.innerHTML = n;
   document.getElementById("number_of_sections").innerHTML = sections.length;
-
   get_storage(idx);
   tr_title.focus();
 
   document.getElementById("rev_btn").innerHTML = '<a href="#modal-review" class="call-modal" onclick="review_translation()">Review submission</a>';
   document.getElementById("review_sub").style.display = '';
 
+  if (typeof window.location.hash !== 'undefined') {
+    window.location.hash = 'story-' + idx;
+  }
 }
 
 function get_storage(idx) {
@@ -132,13 +134,13 @@ function review_translation() {
   document.getElementById("thanks").value = "/translator/thanks.html?" + idx;
 
   prepare_submission();
-  
+
 }
 
 function story_api() {
   var geturl = location.href;
-  if (/\?/.test(geturl) == true) {
-    var args = /\?(\d+)/.exec(geturl)[1];
+  if (/#story-\d/.test(geturl) == true) {
+    var args = /#story-(\d+)/.exec(geturl)[1];
     serial = 0;
     for (var n = 0; n < json.length; n++) {
       if (json[n].i == args) {
