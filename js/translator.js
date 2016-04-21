@@ -40,9 +40,9 @@ function translate_story(nav) {
 
   check_lang();
 
-  url = location.href.replace(/[#\?\!]+.*/, "");
+  var myurl = location.href.replace(/[#\?\!]+.*/, "");
   permalink.style.display = '';
-  permalink.innerHTML = "<a href=\"" + url + "?" + idx + "\">Permalink to this story</a><span class=\"dot\"> • </span>";
+  permalink.innerHTML = "<a href=\"" + myurl + "#" + idx + "\">Permalink to this story</a><span class=\"dot\"> • </span>";
   for (var i = 0; i < sections.length; i++) {
     page_number = i + 2;
     if (page_number < 10) {
@@ -65,13 +65,15 @@ function translate_story(nav) {
   idx_store.innerHTML = idx;
   serial_store.innerHTML = n;
   document.getElementById("number_of_sections").innerHTML = sections.length;
-
   get_storage(idx);
   tr_title.focus();
 
   document.getElementById("rev_btn").innerHTML = '<a href="#modal-review" class="call-modal" onclick="review_translation()">Review submission</a>';
   document.getElementById("review_sub").style.display = '';
 
+  if (typeof window.location.hash !== 'undefined') {
+    window.location.hash = '' + idx;
+  }
 }
 
 function get_storage(idx) {
@@ -132,13 +134,13 @@ function review_translation() {
   document.getElementById("thanks").value = "/translator/thanks.html?" + idx;
 
   prepare_submission();
-  
+
 }
 
 function story_api() {
   var geturl = location.href;
-  if (/\?/.test(geturl) == true) {
-    var args = /\?(\d+)/.exec(geturl)[1];
+  if (/[#\?]\d/.test(geturl) == true) {
+    var args = /[#\?](\d+)/.exec(geturl)[1];
     serial = 0;
     for (var n = 0; n < json.length; n++) {
       if (json[n].i == args) {
@@ -170,7 +172,7 @@ function prepare_submission() {
   window.rev_msg.innerHTML = "If you are satisfied with your translation, press the submit button below to send it for inclusion in the Global-ASP project:";
 }
 
-function check_lang() {
+function check_lang(callback) {
   var language = document.getElementById("language");
   localStorage["gtr_l"]=language.innerHTML.replace(/\n|<br>/g, "");
   language.style["background-color"] = "#fff";
@@ -183,23 +185,45 @@ function check_lang() {
       if (language.innerHTML.toLowerCase() == names[i].l[n].toLowerCase()) {
         iso = names[i].l[0];
         full_name = names[i].l[1];
+        break;
       }
     }
     if (iso != "") {
       for (var i = 0; i < gasp.length; i++) {
         if (gasp[i][iso]) {
           idx_array = gasp[i][iso].split(",");
+          var foundTranslation = false;
           for (var n = 0; n < idx_array.length; n++) {
             if (idx_array[n] == idx) {
               language.style["background-color"] = "#FF8C8E";
               tr_msg = "This story (#" + idx + ") has already been translated into " + full_name;
-              msg_format = "<span style=\"background-color:#FFFFC2;\">" + tr_msg + "</span>";
+              msg_format = "<span style=\"background-color:#FFFFC2;margin-right:12px;\">" + tr_msg + "</span>";
+              nx_msg = "Skip translated stories";
+              msg_format += "<a href='#' onclick='skip_translated()'>" + nx_msg + "</a>";
               msg_bar.innerHTML = msg_format;
               msg_bar.style.display = '';
+              if (typeof callback === 'function') {
+                callback(false);
+              }
+              return;
             }
           }
+          // no translation yet
+          if (typeof callback === 'function') {
+            callback(true);
+          }
+          return;
         }
       }
     }
   }
+}
+
+function skip_translated() {
+  (document.getElementById('next').onclick)();
+  check_lang(function(freeToTranslate) {
+    if (!freeToTranslate) {
+      skip_translated();
+    }
+  });
 }
