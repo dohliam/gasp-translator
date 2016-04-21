@@ -172,7 +172,7 @@ function prepare_submission() {
   window.rev_msg.innerHTML = "If you are satisfied with your translation, press the submit button below to send it for inclusion in the Global-ASP project:";
 }
 
-function check_lang() {
+function check_lang(callback) {
   var language = document.getElementById("language");
   localStorage["gtr_l"]=language.innerHTML.replace(/\n|<br>/g, "");
   language.style["background-color"] = "#fff";
@@ -185,23 +185,45 @@ function check_lang() {
       if (language.innerHTML.toLowerCase() == names[i].l[n].toLowerCase()) {
         iso = names[i].l[0];
         full_name = names[i].l[1];
+        break;
       }
     }
     if (iso != "") {
       for (var i = 0; i < gasp.length; i++) {
         if (gasp[i][iso]) {
           idx_array = gasp[i][iso].split(",");
+          var foundTranslation = false;
           for (var n = 0; n < idx_array.length; n++) {
             if (idx_array[n] == idx) {
               language.style["background-color"] = "#FF8C8E";
               tr_msg = "This story (#" + idx + ") has already been translated into " + full_name;
-              msg_format = "<span style=\"background-color:#FFFFC2;\">" + tr_msg + "</span>";
+              msg_format = "<span style=\"background-color:#FFFFC2;margin-right:12px;\">" + tr_msg + "</span>";
+              nx_msg = "Skip translated stories";
+              msg_format += "<a href='#' onclick='skip_translated()'>" + nx_msg + "</a>";
               msg_bar.innerHTML = msg_format;
               msg_bar.style.display = '';
+              if (typeof callback === 'function') {
+                callback(false);
+              }
+              return;
             }
           }
+          // no translation yet
+          if (typeof callback === 'function') {
+            callback(true);
+          }
+          return;
         }
       }
     }
   }
+}
+
+function skip_translated() {
+  (document.getElementById('next').onclick)();
+  check_lang(function(freeToTranslate) {
+    if (!freeToTranslate) {
+      skip_translated();
+    }
+  });
 }
