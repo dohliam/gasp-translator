@@ -9,7 +9,6 @@ function translate_story(nav) {
   var next = document.getElementById("next");
   var previous = document.getElementById("prev");
   var translate_button = document.getElementById("translate_button");
-  var permalink = document.getElementById("permalink");
 
   n = parseInt(serial_store.innerHTML);
   if (nav == "prev") {
@@ -40,9 +39,6 @@ function translate_story(nav) {
 
   check_lang();
 
-  var myurl = location.href.replace(/[#\?\!]+.*/, "");
-  permalink.style.display = '';
-  permalink.innerHTML = "<a href=\"" + myurl + "#" + idx + "\">Permalink to this story</a><span class=\"dot\"> • </span>";
   for (var i = 0; i < sections.length; i++) {
     page_number = i + 2;
     if (page_number < 10) {
