@@ -9,7 +9,6 @@ function translate_story(nav) {
   var next = document.getElementById("next");
   var previous = document.getElementById("prev");
   var translate_button = document.getElementById("translate_button");
-  var permalink = document.getElementById("permalink");
 
   n = parseInt(serial_store.innerHTML);
   if (nav == "prev") {
@@ -38,11 +37,13 @@ function translate_story(nav) {
   translate_button.style.display = 'none';
   nav_buttons.style.display = 'inline-block';
 
+  next_story = parseInt(n) + 1;
+  prev_story = parseInt(n) - 1;
+  next.setAttribute("onclick", "translate_story(" + next_story + ")")
+  prev.setAttribute("onclick", "translate_story(" + prev_story + ")")
+
   check_lang();
 
-  var myurl = location.href.replace(/[#\?\!]+.*/, "");
-  permalink.style.display = '';
-  permalink.innerHTML = "<a href=\"" + myurl + "#" + idx + "\">Permalink to this story</a><span class=\"dot\"> • </span>";
   for (var i = 0; i < sections.length; i++) {
     page_number = i + 2;
     if (page_number < 10) {
@@ -57,10 +58,6 @@ function translate_story(nav) {
   attribution_row = "          <td></td>\n          <td id=\"attribution\">" + attribution.replace(/\n/g, "<br>") + "</td>\n          <td>" + attribution.replace(/\n/g, "<br>").replace(/Language: .*/, translang) + "</td>        </tr>";
   story_table.innerHTML = content_div + attribution_row + "      </table>";
 
-  next_story = parseInt(n) + 1;
-  prev_story = parseInt(n) - 1;
-  next.setAttribute("onclick", "translate_story(" + next_story + ")")
-  prev.setAttribute("onclick", "translate_story(" + prev_story + ")")
   nav_buttons.style.display = '';
   idx_store.innerHTML = idx;
   serial_store.innerHTML = n;
@@ -150,6 +147,7 @@ function story_api() {
     }
     translate_story(serial);
   }
+  check_translate_toggler();
 }
 
 function random_story() {
@@ -172,7 +170,7 @@ function prepare_submission() {
   window.rev_msg.innerHTML = "If you are satisfied with your translation, press the submit button below to send it for inclusion in the Global-ASP project:";
 }
 
-function check_lang(callback) {
+function check_lang() {
   var language = document.getElementById("language");
   localStorage["gtr_l"]=language.innerHTML.replace(/\n|<br>/g, "");
   language.style["background-color"] = "#fff";
@@ -199,18 +197,15 @@ function check_lang(callback) {
               tr_msg = "This story (#" + idx + ") has already been translated into " + full_name;
               msg_format = "<span style=\"background-color:#FFFFC2;margin-right:12px;\">" + tr_msg + "</span>";
               nx_msg = "Skip translated stories";
-              msg_format += "<a href='#' onclick='skip_translated()'>" + nx_msg + "</a>";
+              msg_format += "<a href='#' onclick='toggle_hide_translated(1)'>" + nx_msg + "</a>";
               msg_bar.innerHTML = msg_format;
               msg_bar.style.display = '';
-              if (typeof callback === 'function') {
-                callback(false);
+              // translation already completed on this book
+              if (localStorage["hide_translated"] == 1) {
+                (document.getElementById('next').onclick)();
               }
               return;
             }
-          }
-          // no translation yet
-          if (typeof callback === 'function') {
-            callback(true);
           }
           return;
         }
@@ -219,11 +214,29 @@ function check_lang(callback) {
   }
 }
 
-function skip_translated() {
-  (document.getElementById('next').onclick)();
-  check_lang(function(freeToTranslate) {
-    if (!freeToTranslate) {
-      skip_translated();
+function check_translate_toggler() {
+  var translate_toggler = document.getElementById("hide");
+  if (localStorage["hide_translated"] == 1) {
+    translate_toggler.title = "Show translated works";
+    translate_toggler.innerHTML = '<img src="visibility.png">';
+  } else {
+    translate_toggler.title = "Hide translated works";
+    translate_toggler.innerHTML = '<img src="visibility_off.png">';
+  }
+}
+
+function toggle_hide_translated(setval) {
+  if (typeof setval != 'undefined') {
+    localStorage["hide_translated"] = setval;
+  } else {
+    if (typeof localStorage["hide_translated"] == 'undefined') {
+      localStorage["hide_translated"] = 0;
     }
-  });
+    localStorage["hide_translated"] = 1 - localStorage["hide_translated"];
+    check_translate_toggler();
+  }
+  if (localStorage["hide_translated"] == 1) {
+    // turn off translated works and advance
+    check_lang();
+  }
 }
