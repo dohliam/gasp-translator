@@ -218,10 +218,10 @@ function check_translate_toggler() {
   var translate_toggler = document.getElementById("hide");
   if (localStorage["hide_translated"] == 1) {
     translate_toggler.title = "Show translated works";
-    translate_toggler.innerHTML = '<img src="visibility.png">';
+    translate_toggler.innerHTML = '<img src="img/show.png">';
   } else {
     translate_toggler.title = "Hide translated works";
-    translate_toggler.innerHTML = '<img src="visibility_off.png">';
+    translate_toggler.innerHTML = '<img src="img/hide.png">';
   }
 }
 
