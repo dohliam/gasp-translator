@@ -54,7 +54,7 @@ table {
   width: 100%;
 }
 td, th {
-  vertical-align: top;
+  vertical-align: middle;
 }
 textarea {
   width: 100%;
