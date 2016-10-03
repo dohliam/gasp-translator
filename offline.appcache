@@ -1,11 +1,11 @@
 CACHE MANIFEST
-# 1475090321
+# 1475451065
 
 css/modal.css
 css/translator.css
-next.png
-previous.png
-random.png
+img/next.png
+img/previous.png
+img/random.png
 js/completed.js
 js/modal.js
 js/stories.js

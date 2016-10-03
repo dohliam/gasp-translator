@@ -22,7 +22,8 @@ function translate_story(nav) {
 
   sections = json[n].s;
 
-  content_div = "      <table id=\"content_table\">\n        <tr><th style='width:5%'></th><th style='width:30%'>original asp story</th><th style='width:65%'>your translation</th></tr><tr>\n          <td><img class=\"thumbnail\" src=\"https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/" + idx + "/01.jpg\"></td>\n          <td id=\"title\"><h3>" + title + "</h3></td>\n          <td id=\"story_tgt_title\"><input type=\"text\" id=\"title_text\" /></td></tr><tr>\n";
+  first_img = '<a href="https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/' + idx + '/01.jpg" data-caption="' + title + '"><img class="thumbnail" src="https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/' + idx + '/01.jpg" alt="image 01"></a>'
+  content_div = "      <div class=\"gallery\"><table id=\"content_table\">\n        <tr><th style='width:5%'></th><th style='width:30%'>original asp story</th><th style='width:65%'>your translation</th></tr><tr>\n          <td>" + first_img + "</td>\n          <td id=\"title\"><h3>" + title + "</h3></td>\n          <td id=\"story_tgt_title\"><input type=\"text\" id=\"title_text\" /></td></tr><tr>\n";
 
   messages.innerHTML = "Now translating story #" + idx + " - <i>" + title + "</i> into: <span class=\"editable\" contenteditable=\"true\" id=\"language\" placeholder=\"Target language\"></span>";
   var language = document.getElementById("language");
@@ -49,14 +50,15 @@ function translate_story(nav) {
     if (page_number < 10) {
       page_number = "0" + page_number;
     }
-    content_div = content_div + "          <td><img class=\"thumbnail\" src=\"https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/" + idx + "/" + page_number + ".jpg\"></td>\n          <td id=\"story_src_" + i + "\">" + json[n].s[i][page_number] + "</td>\n          <td><textarea id=\"story_tgt_" + i + "\"></textarea></td>        </tr>"
+    lightbox_img = '<a href="https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/' + idx + '/' + page_number + '.jpg" data-caption="' + json[n].s[i][page_number] + '"><img class="thumbnail" src="https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/' + idx + '/' + page_number + '.jpg" alt="image ' + page_number + '"></a>'
+    content_div = content_div + "          <td>" + lightbox_img + "</td>\n          <td id=\"story_src_" + i + "\">" + json[n].s[i][page_number] + "</td>\n          <td><textarea id=\"story_tgt_" + i + "\"></textarea></td>        </tr>"
   }
 
   translang = "Translation: " + translator.innerHTML + "<br>* Language: " + language.innerHTML;
 
   story_table = document.getElementById("story_table");
   attribution_row = "          <td></td>\n          <td id=\"attribution\">" + attribution.replace(/\n/g, "<br>") + "</td>\n          <td>" + attribution.replace(/\n/g, "<br>").replace(/Language: .*/, translang) + "</td>        </tr>";
-  story_table.innerHTML = content_div + attribution_row + "      </table>";
+  story_table.innerHTML = content_div + attribution_row + "      </table></div>";
 
   nav_buttons.style.display = '';
   idx_store.innerHTML = idx;
@@ -71,6 +73,7 @@ function translate_story(nav) {
   if (typeof window.location.hash !== 'undefined') {
     window.location.hash = '' + idx;
   }
+  baguetteBox.run('.gallery');
 }
 
 function get_storage(idx) {

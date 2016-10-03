@@ -86,3 +86,5 @@ The full text of the original ASP stories is derived from the [asp-source repo](
 Submissions are handled by [Formspree](http://formspree.io/).
 
 Pure CSS modals within the app are made possible by [drublic](https://github.com/drublic)'s [css-modal](https://github.com/drublic/css-modal) project.
+
+Pure JavaScript lightbox image galleries are thanks to [baguetteBox.js](https://github.com/feimosi/baguetteBox.js).
