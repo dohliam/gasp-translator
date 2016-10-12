@@ -21,11 +21,12 @@ function translate_story(nav) {
   attribution = json[n].a.replace(/^(.)\|(.*?)\|(.*)/, "* License: [CC-$1]\n* Text: $2\n* Illustration: $3\n* Language: English\n").replace(/,/g, ", ").replace(/CC\-b/, "CC-BY").replace(/CC\-n/, "CC-BY-NC");
 
   sections = json[n].s;
+  img_index = 0 + sections.length + 6;
 
-  first_img = '<a href="https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/' + idx + '/01.jpg" data-caption="' + title + '"><img class="thumbnail" src="https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/' + idx + '/01.jpg" alt="image 01"></a>'
-  content_div = "      <div class=\"gallery\"><table id=\"content_table\">\n        <tr><th style='width:5%'></th><th style='width:30%'>original asp story</th><th style='width:65%'>your translation</th></tr><tr>\n          <td>" + first_img + "</td>\n          <td id=\"title\"><h3>" + title + "</h3></td>\n          <td id=\"story_tgt_title\"><input type=\"text\" id=\"title_text\" /></td></tr><tr>\n";
+  first_img = '<a href="https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/' + idx + '/01.jpg" data-caption="' + title + '" tabindex="' + img_index + '"><img class="thumbnail" src="https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/' + idx + '/01.jpg" alt="image 01"></a>'
+  content_div = "      <div class=\"gallery\"><table id=\"content_table\">\n        <tr><th style='width:5%'></th><th style='width:30%'>original asp story</th><th style='width:65%'>your translation</th></tr><tr>\n          <td>" + first_img + "</td>\n          <td id=\"title\"><h3>" + title + "</h3></td>\n          <td id=\"story_tgt_title\"><input type=\"text\" id=\"title_text\" tabindex=\"3\" /></td></tr><tr>\n";
 
-  messages.innerHTML = "Now translating story #" + idx + " - <i>" + title + "</i> into: <span class=\"editable\" contenteditable=\"true\" id=\"language\" placeholder=\"Target language\"></span>";
+  messages.innerHTML = "Now translating story #" + idx + " - <i>" + title + "</i> into: <span class=\"editable\" contenteditable=\"true\" id=\"language\" placeholder=\"Target language\" tabindex=\"1\"></span>";
   var language = document.getElementById("language");
   language.setAttribute("oninput", "localStorage['gtr_l']=this.innerHTML; check_lang();");
   if (localStorage["gtr_l"]) {
@@ -47,11 +48,13 @@ function translate_story(nav) {
 
   for (var i = 0; i < sections.length; i++) {
     page_number = i + 2;
+    tab_index = i + 3;
+    img_index = i + json[n].s.length + 6;
     if (page_number < 10) {
       page_number = "0" + page_number;
     }
-    lightbox_img = '<a href="https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/' + idx + '/' + page_number + '.jpg" data-caption="' + json[n].s[i][page_number] + '"><img class="thumbnail" src="https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/' + idx + '/' + page_number + '.jpg" alt="image ' + page_number + '"></a>'
-    content_div = content_div + "          <td>" + lightbox_img + "</td>\n          <td id=\"story_src_" + i + "\">" + json[n].s[i][page_number] + "</td>\n          <td><textarea id=\"story_tgt_" + i + "\"></textarea></td>        </tr>"
+    lightbox_img = '<a href="https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/' + idx + '/' + page_number + '.jpg" data-caption="' + json[n].s[i][page_number] + '" tabindex="' + img_index + '"><img class="thumbnail" src="https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/' + idx + '/' + page_number + '.jpg" alt="image ' + page_number + '"></a>'
+    content_div = content_div + "          <td>" + lightbox_img + "</td>\n          <td id=\"story_src_" + i + "\">" + json[n].s[i][page_number] + "</td>\n          <td><textarea id=\"story_tgt_" + i + "\" tabindex=\"" + tab_index + "\"></textarea></td>        </tr>"
   }
 
   translang = "Translation: " + translator.innerHTML + "<br>* Language: " + language.innerHTML;
@@ -67,7 +70,8 @@ function translate_story(nav) {
   get_storage(idx);
   tr_title.focus();
 
-  document.getElementById("rev_btn").innerHTML = '<a href="#modal-review" class="call-modal" onclick="review_translation()">Review submission</a>';
+  tab_index = window.number_of_sections + 3;
+  document.getElementById("rev_btn").innerHTML = '<a href="#modal-review" class="call-modal" onclick="review_translation()" tabindex="' + tab_index + '">Review submission</a>';
   document.getElementById("review_sub").style.display = '';
 
   if (typeof window.location.hash !== 'undefined') {
@@ -169,7 +173,8 @@ function prepare_submission() {
   window.story_translation.value = window.translation_output.value;
   rev.style.width = "80%";
   rev.classList.remove("tooltip");
-  window.rev_btn.innerHTML = '<a href="#modal-review" class="call-modal" onclick="review_translation()">Continue reviewing</a>';
+  tab_index = window.number_of_sections + 3;
+  window.rev_btn.innerHTML = '<a href="#modal-review" class="call-modal" onclick="review_translation()" tabindex="' + tab_index + '">Continue reviewing</a>';
   window.rev_msg.innerHTML = "If you are satisfied with your translation, press the submit button below to send it for inclusion in the Global-ASP project:";
 }
 
