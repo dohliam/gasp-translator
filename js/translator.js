@@ -107,38 +107,45 @@ function review_translation() {
   translation_output = document.getElementById("translation_output");
   var container = document.getElementById("container");
 
-  content_div = "      <table id=\"content_table\">\n        <tr><th style='width:25%'></th><th style='width:65%'>your translation</th></tr><tr>\n          <td><img class=\"revthumb\" src=\"https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/" + idx + "/01.jpg\"></td>\n          <td><h3>" + tr_title + "</h3></td></tr><tr>\n";
+  if (translator.innerHTML == "") {
+    alert("Please fill in the name of the translator. Your translation cannot be submitted without attribution.");
+    close_modal();
+  } else if (language.innerHTML == "") {
+    alert("Please fill in the language name. You will not be able to submit your translation without providing the name of the language.")
+    close_modal();
+  } else {
+    content_div = "      <table id=\"content_table\">\n        <tr><th style='width:25%'></th><th style='width:65%'>your translation</th></tr><tr>\n          <td><img class=\"revthumb\" src=\"https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/" + idx + "/01.jpg\"></td>\n          <td><h3>" + tr_title + "</h3></td></tr><tr>\n";
 
-  format_content = "# " + tr_title + "\n\n##\n";
-  for (var i = 0; i < number_of_sections; i++) {
-    tr_text = document.getElementById("story_tgt_" + i).value;
-    format_content = format_content + tr_text + "\n\n##\n";
+    format_content = "# " + tr_title + "\n\n##\n";
+    for (var i = 0; i < number_of_sections; i++) {
+      tr_text = document.getElementById("story_tgt_" + i).value;
+      format_content = format_content + tr_text + "\n\n##\n";
 
-    page_number = i + 2;
-    if (page_number < 10) {
-      page_number = "0" + page_number;
+      page_number = i + 2;
+      if (page_number < 10) {
+	page_number = "0" + page_number;
+      }
+      if (page_number != 0 || page_number != page_number.length) {
+	content_div = content_div + "          <td><img class=\"revthumb\" src=\"https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/" + idx + "/" + page_number + ".jpg\"></td>\n          <td>" + window["story_tgt_" + i].value + "</td>        </tr>"
+      }
+
     }
-    if (page_number != 0 || page_number != page_number.length) {
-      content_div = content_div + "          <td><img class=\"revthumb\" src=\"https://raw.githubusercontent.com/global-asp/asp-imagebank/master/medium/" + idx + "/" + page_number + ".jpg\"></td>\n          <td>" + window["story_tgt_" + i].value + "</td>        </tr>"
-    }
+    translang = "Translation: " + translator.innerHTML + "\n* Language: " + language.innerHTML;
 
+    translation_output.value = format_content + attribution.replace(/<br>/g, "\n").replace(/Language: .*/, translang);
+
+    document.getElementById("submit_form").style.display = '';
+
+    format_attribution = "<ul>" + attribution.replace(/Language: .*/, "") + translang.replace(/\n/g, "<br>") + "</ul>";
+    format_attribution = format_attribution.replace(/\* (.*?)</g, "<li>$1</li><").replace(/<br>/g, "");
+
+    var review_table = document.getElementById("review_table");
+    review_table.innerHTML = content_div + "<tr><td></td><td>" + format_attribution + "</td></tr></table>";
+
+    document.getElementById("thanks").value = "/translator/thanks.html?" + idx;
+
+    prepare_submission();
   }
-  translang = "Translation: " + translator.innerHTML + "\n* Language: " + language.innerHTML;
-
-  translation_output.value = format_content + attribution.replace(/<br>/g, "\n").replace(/Language: .*/, translang);
-
-  document.getElementById("submit_form").style.display = '';
-
-  format_attribution = "<ul>" + attribution.replace(/Language: .*/, "") + translang.replace(/\n/g, "<br>") + "</ul>";
-  format_attribution = format_attribution.replace(/\* (.*?)</g, "<li>$1</li><").replace(/<br>/g, "");
-
-  var review_table = document.getElementById("review_table");
-  review_table.innerHTML = content_div + "<tr><td></td><td>" + format_attribution + "</td></tr></table>";
-
-  document.getElementById("thanks").value = "/translator/thanks.html?" + idx;
-
-  prepare_submission();
-
 }
 
 function story_api() {
@@ -225,10 +232,10 @@ function check_lang() {
 function check_translate_toggler() {
   var translate_toggler = document.getElementById("hide");
   if (localStorage["hide_translated"] == 1) {
-    translate_toggler.title = "Show translated works";
+    translate_toggler.title = "Show completed translations";
     translate_toggler.innerHTML = '<img src="img/show.png">';
   } else {
-    translate_toggler.title = "Hide translated works";
+    translate_toggler.title = "Hide completed translations";
     translate_toggler.innerHTML = '<img src="img/hide.png">';
   }
 }
@@ -246,5 +253,12 @@ function toggle_hide_translated(setval) {
   if (localStorage["hide_translated"] == 1) {
     // turn off translated works and advance
     check_lang();
+  }
+}
+
+function close_modal() {
+  close_button = document.getElementsByClassName("modal-close");
+  for (i = 0; i < close_button.length; i++) {
+    close_button[i].click();
   }
 }
